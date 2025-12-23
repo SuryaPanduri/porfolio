@@ -8,5 +8,21 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <svg width="0" height="0">
+      <filter id="frosted">
+        <feGaussianBlur in="SourceGraphic" stdDeviation="16" result="blur"/>
+        <feColorMatrix
+          in="blur"
+          type="matrix"
+          values="
+            1 0 0 0 0
+            0 1 0 0 0
+            0 0 1 0 0
+            0 0 0 20 -8"
+          result="frost"
+        />
+        <feComposite in="SourceGraphic" in2="frost" operator="atop"/>
+      </filter>
+    </svg>
   </body>
 </html>

@@ -1,81 +1,52 @@
 import React, { useEffect, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { getProjects } from "../api/projects";
 
 export default function Projects() {
-  const ref = useRef(null);
+  const [projects, setProjects] = useState([]);
 
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
-
-  /* ---------------- TEXT (Best Work) ---------------- */
-
-  // Slower fade out
-  const titleOpacity = useTransform(
-    scrollYProgress,
-    [0.0, 0.35], // increased range → slower fade
-    [1, 0]
-  );
-
-  /* ---------------- MACBOOK ---------------- */
-
-  // Slower fade in
-  const macOpacity = useTransform(
-    scrollYProgress,
-    [0.25, 0.55], // increased range
-    [0, 1]
-  );
-
-  // Slower bottom → center movement
-  const macY = useTransform(
-    scrollYProgress,
-    [0.25, 0.55],
-    [260, 0] // slightly more distance
-  );
-
-  // Subtle zoom while pinned
-const macScale = useTransform(
-  scrollYProgress,
-  [0.35, 0.85], // long range = slow zoom
-  [1, 1.05]
-);
+  useEffect(() => {
+    getProjects()
+      .then(setProjects)
+      .catch((err) => console.error("Failed to load projects", err));
+  }, []);
 
   return (
-    <section
-      ref={ref}
-      className="relative h-[450vh] bg-black text-white"
-    >
-      {/* BEST WORK TEXT */}
-      <div className="sticky top-0 h-screen flex items-center justify-center">
+    <main className="relative min-h-screen px-6 py-32 text-white">
+      <div className="max-w-6xl mx-auto">
         <motion.h1
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{
-            duration: 1.4, // slower fade-in
-            ease: [0.4, 0, 0.2, 1],
-          }}
-          style={{ opacity: titleOpacity }}
-          className="text-7xl md:text-8xl font-semibold tracking-tight"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-5xl md:text-6xl font-semibold tracking-tight mb-20"
         >
-          Best Work
+          Projects
         </motion.h1>
-      </div>
 
-      {/* MACBOOK */}
-      <div className="sticky top-0 h-screen flex items-center justify-center pointer-events-none">
-      <motion.img
-  src="/images/macbook.png"
-  alt="MacBook"
-  style={{
-    opacity: macOpacity,
-    y: macY,
-    scale: macScale, // 👈 ADD THIS
-  }}
-  className="w-[900px] max-w-full"
-/>
+        <div className="grid md:grid-cols-2 gap-12">
+          {projects.map((project) => (
+            <Link
+              key={project._id}
+              to={`/projects/${project._id}`}
+              className="group rounded-3xl border border-white/15 bg-white/5 backdrop-blur p-8 transition hover:bg-white/10"
+            >
+              <h2 className="text-2xl font-medium mb-3 group-hover:underline">
+                {project.title}
+              </h2>
+
+              {/* ✅ FIXED FIELD */}
+              <p className="text-gray-300 leading-relaxed">
+                {project.shortDescription}
+              </p>
+
+              <span className="inline-block mt-6 text-sm text-gray-400">
+                View case study →
+              </span>
+            </Link>
+          ))}
+        </div>
       </div>
-    </section>
+    </main>
   );
 }

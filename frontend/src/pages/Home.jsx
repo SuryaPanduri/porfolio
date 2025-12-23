@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   motion,
   useScroll,
@@ -6,126 +6,216 @@ import {
   useMotionValue,
   useSpring,
 } from "framer-motion";
-
-const container = {
-  hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.12 } },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
+import { getFeaturedProjects } from "../api/projects";
 
 export default function Home() {
-  const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 600], [0, -80]);
-  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0.85]);
+  // ✅ STATE
+  const [projects, setProjects] = useState([]);
 
-  // Mouse parallax
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const smoothX = useSpring(mouseX, { stiffness: 40, damping: 20 });
-  const smoothY = useSpring(mouseY, { stiffness: 40, damping: 20 });
-  const x = useTransform(smoothX, [-0.5, 0.5], [-6, 6]);
-  const y = useTransform(smoothY, [-0.5, 0.5], [-4, 4]);
+  // ✅ EFFECT (must be inside component)
+  useEffect(() => {
+    getFeaturedProjects()
+      .then((data) => {
+        setProjects(data);
+      })
+      .catch((err) => {
+        console.error("Failed to load projects", err);
+      });
+  }, []);
 
   return (
-    <main className="relative min-h-screen overflow-hidden">
+    <main className="relative min-h-screen overflow-hidden text-white">
       {/* HERO */}
-      <section
-        className="pt-44 pb-48 px-8"
-        onMouseMove={(e) => {
-          const r = e.currentTarget.getBoundingClientRect();
-          mouseX.set((e.clientX - r.left) / r.width - 0.5);
-          mouseY.set((e.clientY - r.top) / r.height - 0.5);
-        }}
-        onMouseLeave={() => {
-          mouseX.set(0);
-          mouseY.set(0);
-        }}
-      >
+      <section className="min-h-screen flex items-center px-6">
         <motion.div
-          style={{ x, y, y: heroY, opacity: heroOpacity }}
-          className="max-w-6xl pl-4 sm:pl-8 lg:pl-16"
-          variants={container}
-          initial="hidden"
-          animate="show"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="max-w-5xl mx-auto text-center"
         >
-          <motion.p variants={item} className="text-xl md:text-8xl text-gray-300 mb-3">
+          <p className="text-xl md:text-2xl text-gray-300 mb-6">
             Hi, I’m Surya 👋
-          </motion.p>
+          </p>
 
-          <motion.p
-            variants={item}
-            className="text-base md:text-4xl uppercase tracking-[0.35em] text-gray-400 mb-8"
-          >
-            Full-Stack Developer
-          </motion.p>
-
-          <motion.h1
-            variants={item}
-            className="text-5xl md:text-6xl lg:text-7xl font-semibold text-white leading-tight max-w-4xl"
-          >
-            Designing & building
+          <h1 className="text-5xl md:text-7xl font-semibold tracking-tight leading-tight">
+            I build scalable
             <br />
-            thoughtful digital
-            <br />
-            experiences.
-          </motion.h1>
+            full-stack web applications.
+          </h1>
 
-          <motion.p
-            variants={item}
-            className="mt-8 text-lg text-gray-300 max-w-2xl"
-          >
-            I focus on clean architecture, performance, and modern UI to
-            build products that feel effortless.
-          </motion.p>
+          <p className="mt-8 text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto">
+            Full-Stack MERN Developer focused on clean architecture,
+            performance, and real-world problem solving.
+          </p>
 
-          <motion.div variants={item} className="mt-12 flex gap-8">
-            <motion.a
+          <div className="mt-14 flex justify-center gap-8">
+            <a
               href="/projects"
-              whileHover={{
-                scale: 1.04,
-                boxShadow: "0 10px 30px rgba(0,0,0,0.35)",
-              }}
-              whileTap={{ scale: 0.98 }}
-              className="px-7 py-3 rounded-full border border-white/40 bg-white/10 backdrop-blur text-white hover:bg-white hover:text-black transition"
+              className="px-9 py-4 text-lg rounded-full bg-white text-black hover:bg-gray-200 transition"
             >
-              View work
-            </motion.a>
-
+              View Projects
+            </a>
             <a
               href="/contact"
-              className="text-gray-300 hover:text-white transition"
+              className="px-9 py-4 text-lg rounded-full border border-white/30 hover:bg-white hover:text-black transition"
             >
-              Get in touch →
+              Contact Me
             </a>
-          </motion.div>
+          </div>
         </motion.div>
       </section>
 
-      {/* PROJECTS */}
-      <section className="pb-40 px-8">
-        <div className="max-w-6xl pl-4 sm:pl-8 lg:pl-16">
-          <h2 className="text-3xl md:text-4xl font-semibold text-white mb-16">
-            Selected Work
-          </h2>
+      {/* WHAT I BUILD */}
+      {/* WHAT I BUILD */}
+<section className="py-32 px-6 relative">
+  <div className="max-w-6xl mx-auto">
+    <h2 className="text-3xl md:text-4xl font-semibold mb-16">
+      What I build
+    </h2>
 
-          <div className="grid md:grid-cols-2 gap-12">
-            {["INVENZO Asset Manager", "Weather App"].map((p) => (
-              <div
-                key={p}
-                className="rounded-3xl bg-white/95 backdrop-blur p-8 shadow-xl"
-              >
-                <h3 className="text-2xl font-medium text-gray-900">{p}</h3>
-                <p className="mt-3 text-gray-600">
-                  A clean, scalable product focused on usability and clarity.
-                </p>
-              </div>
-            ))}
+    <div className="grid md:grid-cols-3 gap-12">
+      {[
+        {
+          title: "Full-Stack Applications",
+          desc: "End-to-end MERN applications with authentication, APIs, and scalable architecture.",
+          glow: "from-purple-500/30 to-pink-500/30",
+        },
+        {
+          title: "Secure Backend APIs",
+          desc: "Well-structured REST APIs using JWT, MongoDB, and role-based access control.",
+          glow: "from-blue-500/30 to-cyan-500/30",
+        },
+        {
+          title: "Scalable Frontends",
+          desc: "Modern React interfaces with performance-first design and subtle motion.",
+          glow: "from-emerald-500/30 to-teal-500/30",
+        },
+      ].map((item, i) => (
+        <motion.div
+          key={item.title}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: i * 0.1 }}
+          viewport={{ once: true }}
+          className="group relative rounded-3xl border border-white/15 bg-white/5 backdrop-blur-xl p-8 overflow-hidden"
+        >
+          {/* Glow */}
+          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500">
+            <div
+              className={`absolute -top-24 -left-24 w-72 h-72 bg-gradient-to-br ${item.glow} blur-3xl rounded-full`}
+            />
           </div>
-        </div>
+
+          {/* Content */}
+          <div className="relative z-10">
+            <h3 className="text-xl font-medium mb-4">
+              {item.title}
+            </h3>
+            <p className="text-gray-300 leading-relaxed">
+              {item.desc}
+            </p>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  </div>
+</section>
+
+      {/* FEATURED PROJECTS */}
+{/* FEATURED PROJECTS */}
+<section className="py-32 px-6 relative">
+  <div className="max-w-6xl mx-auto">
+    <h2 className="text-3xl md:text-4xl font-semibold mb-16">
+      Featured Projects
+    </h2>
+
+    {projects.length === 0 ? (
+      <p className="text-gray-400">
+        Featured projects coming soon.
+      </p>
+    ) : (
+      <div className="grid md:grid-cols-2 gap-12">
+        {projects.map((project, i) => (
+          <motion.div
+            key={project._id}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: i * 0.1 }}
+            viewport={{ once: true }}
+            className="group relative rounded-3xl border border-white/15 bg-white/5 backdrop-blur-xl p-8 overflow-hidden"
+          >
+            {/* Glow Layer */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-500">
+              <div className="absolute -top-24 -left-24 w-64 h-64 bg-purple-500/20 blur-3xl rounded-full" />
+              <div className="absolute bottom-0 right-0 w-64 h-64 bg-blue-500/20 blur-3xl rounded-full" />
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10">
+              <h3 className="text-2xl font-medium mb-3">
+                {project.title}
+              </h3>
+
+              <p className="text-gray-300 mb-6 leading-relaxed">
+                {project.shortDescription}
+              </p>
+
+              {/* Tech stack */}
+              {project.techStack?.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {project.techStack.map((tech) => (
+                    <span
+                      key={tech}
+                      className="text-xs px-3 py-1 rounded-full bg-white/10 text-gray-200"
+                    >
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* CTA */}
+              <div className="flex gap-6 text-sm">
+                <a
+                  href="/projects"
+                  className="font-medium hover:underline"
+                >
+                  View case study →
+                </a>
+
+                {project.githubUrl && (
+                  <a
+                    href={project.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-white transition"
+                  >
+                    GitHub ↗
+                  </a>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
+      {/* CTA */}
+      <section className="py-40 px-6 text-center">
+        <h2 className="text-3xl md:text-4xl font-semibold mb-6">
+          Let’s build something meaningful.
+        </h2>
+        <p className="text-gray-300 mb-10">
+          Open to full-stack roles, collaborations, and startup ideas.
+        </p>
+        <a
+          href="/contact"
+          className="inline-block px-8 py-4 rounded-full bg-white text-black hover:bg-gray-200 transition"
+        >
+          Get in touch
+        </a>
       </section>
     </main>
   );

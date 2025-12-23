@@ -1,13 +1,21 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const projectSchema = new mongoose.Schema({
-  title: {type:String, required:true},
-  shortDesc: String,
-  fullDesc: String,
-  tech: [String],
-  liveUrl: String,
-  repoUrl: String,
-  screenshotUrl: String // optional
-}, { timestamps:true });
+const projectSchema = new mongoose.Schema(
+  {
+    title: { type: String, required: true },
+    shortDescription: { type: String, required: true },
+    longDescription: String,
+    techStack: [String],
 
-module.exports = mongoose.model('Project', projectSchema);
+    featured: {
+      type: Boolean,
+      default: false,
+    },
+
+    githubUrl: String,
+    liveUrl: String,
+  },
+  { timestamps: true }
+);
+
+module.exports = mongoose.model("Project", projectSchema);
