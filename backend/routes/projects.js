@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const Project = require("../models/Project");
 const auth = require("../utils/authMiddleware");
 
@@ -49,11 +50,18 @@ router.post("/", auth, async (req, res) => {
 // Update a project
 router.put("/:id", auth, async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid project id" });
+    }
+
     const project = await Project.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true }
     );
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
     res.json(project);
   } catch (err) {
     res.status(400).json({ message: "Failed to update project" });
@@ -63,7 +71,14 @@ router.put("/:id", auth, async (req, res) => {
 // Delete a project
 router.delete("/:id", auth, async (req, res) => {
   try {
-    await Project.findByIdAndDelete(req.params.id);
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid project id" });
+    }
+
+    const deleted = await Project.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: "Project not found" });
+    }
     res.json({ message: "Project deleted successfully" });
   } catch (err) {
     res.status(400).json({ message: "Failed to delete project" });
@@ -73,6 +88,10 @@ router.delete("/:id", auth, async (req, res) => {
 // Get single project by ID
 router.get("/:id", async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ message: "Invalid project id" });
+    }
+
     const project = await Project.findById(req.params.id);
     if (!project) {
       return res.status(404).json({ message: "Project not found" });

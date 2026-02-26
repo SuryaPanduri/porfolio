@@ -17,34 +17,42 @@
 /* Cinematic Aurora Background */
 body {
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
   background:
-    radial-gradient(
-      1200px 600px at 20% 20%,
-      rgba(88, 101, 242, 0.25),
-      transparent 60%
-    ),
-    radial-gradient(
-      1000px 500px at 80% 30%,
-      rgba(168, 85, 247, 0.25),
-      transparent 55%
-    ),
-    linear-gradient(
-      180deg,
-      #05060a 0%,
-      #0b0f1a 50%,
-      #0a0d14 100%
-    );
-  background-size: 200% 200%;
-  animation: auroraMove 40s ease-in-out infinite;
+    radial-gradient(1200px 700px at 12% 16%,
+      rgba(59, 130, 246, 0.24),
+      transparent 62%),
+    radial-gradient(1080px 620px at 88% 10%,
+      rgba(14, 165, 233, 0.22),
+      transparent 58%),
+    radial-gradient(920px 520px at 48% 86%,
+      rgba(37, 99, 235, 0.2),
+      transparent 60%),
+    linear-gradient(165deg,
+      #04060b 0%,
+      #070d1d 42%,
+      #030913 100%);
+  background-size: 200% 200%, 200% 200%, 180% 180%, 100% 100%;
+  animation: auroraMove 24s ease-in-out infinite;
   color: #e5e7eb;
   font-family: system-ui, -apple-system, BlinkMacSystemFont;
+  isolation: isolate;
 }
 
 /* Aurora animation */
 @keyframes auroraMove {
-  0% { background-position: 0% 0%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 0%; }
+  0% {
+    background-position: 0% 0%, 100% 0%, 40% 100%, 0% 0%;
+  }
+
+  50% {
+    background-position: 100% 50%, 0% 20%, 60% 0%, 0% 0%;
+  }
+
+  100% {
+    background-position: 0% 0%, 100% 0%, 40% 100%, 0% 0%;
+  }
 }
 
 /* Floating stars overlay */
@@ -53,19 +61,124 @@ body::before {
   position: fixed;
   inset: 0;
   background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.35), transparent),
-    radial-gradient(1px 1px at 30% 80%, rgba(255,255,255,0.25), transparent),
-    radial-gradient(1px 1px at 50% 40%, rgba(255,255,255,0.2), transparent),
-    radial-gradient(1px 1px at 70% 10%, rgba(255,255,255,0.3), transparent),
-    radial-gradient(2px 2px at 90% 70%, rgba(255,255,255,0.15), transparent);
+    radial-gradient(1px 1px at 8% 24%, rgba(255, 255, 255, 0.38), transparent),
+    radial-gradient(1px 1px at 22% 78%, rgba(255, 255, 255, 0.24), transparent),
+    radial-gradient(1px 1px at 40% 16%, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 58% 64%, rgba(255, 255, 255, 0.22), transparent),
+    radial-gradient(1px 1px at 76% 34%, rgba(255, 255, 255, 0.28), transparent),
+    radial-gradient(2px 2px at 92% 72%, rgba(255, 255, 255, 0.2), transparent);
+  background-size: 240px 240px;
   pointer-events: none;
-  animation: starDrift 160s linear infinite;
-  z-index: -1;
+  z-index: 0;
+  opacity: 0.72;
+  animation: starDrift 180s linear infinite;
+}
+
+/* Aurora glow film */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -16% -10%;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: screen;
+  opacity: 0.4;
+  background:
+    radial-gradient(40% 30% at 18% 24%, rgba(56, 189, 248, 0.24), transparent 74%),
+    radial-gradient(36% 28% at 80% 36%, rgba(59, 130, 246, 0.2), transparent 76%),
+    radial-gradient(44% 34% at 50% 88%, rgba(14, 116, 144, 0.2), transparent 78%);
+  filter: blur(18px);
+  animation: auroraPulse 14s ease-in-out infinite;
 }
 
 @keyframes starDrift {
-  from { transform: translateY(0); }
-  to { transform: translateY(-200px); }
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+
+  to {
+    transform: translate3d(-80px, -220px, 0);
+  }
+}
+
+@keyframes auroraPulse {
+
+  0%,
+  100% {
+    transform: scale(1) translate3d(0, 0, 0);
+    opacity: 0.32;
+  }
+
+  50% {
+    transform: scale(1.05) translate3d(1.5%, -1.5%, 0);
+    opacity: 0.5;
+  }
+}
+
+.shooting-stars {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.shooting-star {
+  position: absolute;
+  top: var(--star-top, 82%);
+  left: var(--star-left, 6%);
+  width: var(--star-length, 78px);
+  height: 1.5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.95));
+  filter: drop-shadow(0 0 4px rgba(191, 219, 254, 0.32));
+  opacity: 0;
+  transform: rotate(var(--star-angle, -24deg)) translate3d(0, 0, 0);
+  animation: shootingStar var(--star-duration, 10s) linear infinite;
+  animation-delay: var(--star-delay, 0s);
+}
+
+@keyframes shootingStar {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--star-angle, -24deg)) translate3d(0, 0, 0) scaleX(0.25);
+  }
+
+  4% {
+    opacity: 0.6;
+    transform: rotate(var(--star-angle, -24deg)) translate3d(12px, -12px, 0) scaleX(1);
+  }
+
+  14% {
+    opacity: 0;
+    transform: rotate(var(--star-angle, -24deg)) translate3d(var(--star-travel, 210px), calc(var(--star-travel, 210px) * -1), 0) scaleX(0.95);
+  }
+
+  100% {
+    opacity: 0;
+    transform: rotate(var(--star-angle, -24deg)) translate3d(var(--star-travel, 210px), calc(var(--star-travel, 210px) * -1), 0) scaleX(0.95);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  body,
+  body::before,
+  body::after,
+  .shooting-star,
+  .apple-navbar::before {
+    animation: none !important;
+  }
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 /* =========================
@@ -74,29 +187,42 @@ body::before {
 
 .apple-navbar {
   position: fixed;
-  top: 2.5rem;              /* ⬅️ more top padding */
+  top: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 50;
+  z-index: 60;
+  --mx: 50%;
+  --my: 50%;
+  --nav-blur: 20px;
+  --nav-border-color: rgba(255, 255, 255, 0.12);
+  --nav-shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
+  --nav-glass-a: 0.22;
 
   display: flex;
-  gap: 0.2rem;
+  align-items: center;
+  justify-content: center;
 
-  padding: 0.35rem;         /* ⬅️ smaller navbar height */
-
+  gap: 0.35rem;
+  padding: 0.4rem 0.6rem;
   border-radius: 9999px;
-
-  background: rgba(255, 255, 255, var(--glass-alpha, 0.22));
-  border: 1.2px solid rgba(255,255,255,0.42);
+  background: linear-gradient(130deg,
+      rgba(255, 255, 255, calc(var(--nav-glass-a) + 0.04)) 0%,
+      rgba(255, 255, 255, calc(var(--nav-glass-a) - 0.1)) 52%,
+      rgba(255, 255, 255, calc(var(--nav-glass-a) - 0.05)) 100%);
+  border: 1px solid var(--nav-border-color);
 
   box-shadow:
-    0 0 0 1px rgba(255,255,255,0.45),
-    0 12px 28px rgba(0,0,0,0.35);
+    inset 0 1px 1px rgba(255, 255, 255, calc(var(--nav-glass-a) * 1.5)),
+    inset 0 -8px 16px rgba(0, 0, 0, 0.12),
+    var(--nav-shadow);
 
-  backdrop-filter: url(#frosted);
-  -webkit-backdrop-filter: url(#frosted);
+  backdrop-filter: blur(var(--nav-blur)) saturate(200%);
+  -webkit-backdrop-filter: blur(var(--nav-blur)) saturate(200%);
+  transition: border-color 200ms ease, box-shadow 200ms ease, background 200ms ease;
 
   overflow: hidden;
+  width: fit-content;
+  max-width: 94vw;
 }
 
 
@@ -107,8 +233,15 @@ body::before {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: rgba(255,255,255,0.12);
-  mix-blend-mode: overlay;
+  background:
+    radial-gradient(170px 110px at var(--mx) var(--my),
+      rgba(255, 255, 255, 0.3),
+      rgba(255, 255, 255, 0.04) 58%,
+      transparent 100%),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.02) 45%, transparent);
+  background-size: 130% 130%, 100% 100%;
+  animation: navLiquidDrift 12s linear infinite;
+  mix-blend-mode: screen;
 }
 
 /* =========================
@@ -116,8 +249,8 @@ body::before {
 ========================= */
 .apple-nav-item {
   position: relative;
-  padding: 0.45rem 1.3rem;   /* ⬅️ smaller item size */
-  font-size: 10px;          /* ⬅️ Apple menu size */
+  padding: 0.34rem 1.02rem;
+  font-size: 10px;
   font-weight: 500;
   border-radius: 9999px;
 
@@ -127,23 +260,26 @@ body::before {
   user-select: none;
 
   text-shadow:
-    0 0.5px 0 rgba(0,0,0,0.6),
-    0 1px 2px rgba(0,0,0,0.45);
+    0 0.5px 0 rgba(0, 0, 0, 0.6),
+    0 1px 2px rgba(0, 0, 0, 0.45);
+  transition: color 220ms ease, transform 220ms ease;
 }
 
 .apple-nav-item:hover,
 .apple-nav-item:has(.apple-liquid) {
   color: #ffffff;
+  transform: translateY(-0.5px);
   text-shadow:
-    0 1px 2px rgba(0,0,0,0.7),
-    0 0 8px rgba(255,255,255,0.25);
+    0 1px 2px rgba(0, 0, 0, 0.7),
+    0 0 8px rgba(255, 255, 255, 0.25);
 }
 
-.apple-liquid + span,
+.apple-liquid+span,
 .apple-nav-item span {
   position: relative;
   z-index: 1;
 }
+
 /* =========================
    LIQUID POINTER
 ========================= */
@@ -152,15 +288,16 @@ body::before {
   inset: 0;
   border-radius: 9999px;
 
-  background: rgba(255,255,255,0.38);
+  background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(255, 255, 255, 0.12) 100%);
 
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.95),
-    inset 0 -8px 14px rgba(0,0,0,0.12),
-    0 0 0 1px rgba(255,255,255,0.5);
+    inset 0 1px 1px rgba(255, 255, 255, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.1);
 
-  backdrop-filter: url(#frosted);
-  -webkit-backdrop-filter: url(#frosted);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
 }
 
 .apple-liquid::after {
@@ -169,18 +306,20 @@ body::before {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  background: rgba(0,0,0,0.06);
+  background: rgba(0, 0, 0, 0.02);
 }
 
-/* --- Aurora neutralizer (CRITICAL) --- */
-.apple-navbar::before {
+.apple-liquid::before {
   content: "";
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
+  inset: 1px 10% auto;
+  height: 40%;
+  border-radius: 999px;
   pointer-events: none;
-  background: rgba(255,255,255,0.12);
-  mix-blend-mode: overlay;
+  background: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.6),
+      rgba(255, 255, 255, 0.0));
+  opacity: 0.8;
 }
 
 /* =========================
@@ -200,5 +339,143 @@ body::before {
   </svg>");
 
   mix-blend-mode: soft-light;
-  opacity: 0.35;
+  opacity: 0.24;
+}
+
+@keyframes navLiquidDrift {
+  0% {
+    background-position: 0% 0%, 0% 0%;
+  }
+
+  50% {
+    background-position: 45% 25%, 0% 0%;
+  }
+
+  100% {
+    background-position: 0% 0%, 0% 0%;
+  }
+}
+
+@media (max-width: 768px) {
+  .apple-navbar {
+    top: 5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: column;
+    width: 90vw;
+    padding: 1rem;
+    border-radius: 2rem;
+    gap: 0.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .apple-navbar.mobile-open {
+    opacity: 1;
+    pointer-events: auto;
+    background: linear-gradient(135deg, rgba(30, 32, 40, 0.5) 0%, rgba(30, 32, 40, 0.7) 100%);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+  }
+
+  .apple-nav-item {
+    width: 100%;
+    text-align: center;
+    padding: 0.8rem;
+  }
+}
+
+/* Contrast Improvements */
+.text-gray-400 {
+  color: #9ca3af !important;
+  /* Slightly brighter than default for accessibility */
+}
+
+.text-gray-300 {
+  color: #d1d5db !important;
+}
+
+.hover\:underline:hover {
+  text-decoration-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Glass Refinements */
+.glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Shine effect */
+.shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-effect::after {
+  content: "";
+  position: absolute;
+  top: -110%;
+  left: -210%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.1) 50%,
+      rgba(255, 255, 255, 0) 100%);
+  transition: all 0.6s ease;
+}
+
+.shine-effect:hover::after {
+  top: -40%;
+  left: -40%;
+}
+
+/* Section Spacing Utilities */
+.section-padding {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+@media (min-width: 768px) {
+  .section-padding {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
+}
+
+.page-container {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.home-page .section-padding {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .home-page .section-padding {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-container {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
 }

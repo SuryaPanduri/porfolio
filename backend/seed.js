@@ -6,22 +6,30 @@ mongoose.connect(process.env.MONGO_URI).then(async () => {
   await Project.insertMany([
     {
       title: 'INVENZO - Asset Tracker',
-      shortDesc: 'Full-stack asset tracking with role-based auth and asset CRUD.',
-      fullDesc: 'INVENZO handles inventory, checkouts, and RBAC for Admins/Managers/Viewers.',
-      tech: ['React','Node','Express','MySQL'],
-      repoUrl: 'https://github.com/yourusername/invenzo'
+      shortDescription: 'Asset tracking platform for inventory, checkouts, and role-based workflows.',
+      longDescription: 'Developed a full-stack asset tracking application with secure JWT authentication, role-based access for Admin/Manager/Viewer, and dashboard workflows for managing inventory and checkout records.',
+      techStack: ['React','Node.js','Express.js','MySQL','JWT','RBAC','Bootstrap'],
+      githubUrl: 'https://github.com/SuryaPanduri/invenzo',
+      liveUrl: 'https://invenzo.onrender.com/',
+      featured: true
     },
     {
       title: 'MFA-MERN',
-      shortDesc: 'Multi-factor authentication with OTP and secure sessions.',
-      tech: ['MongoDB','Express','React','Node'],
-      repoUrl: 'https://github.com/yourusername/mfa-mern'
+      shortDescription: 'Multi-factor authentication with OTP verification and secure sessions.',
+      longDescription: 'Built a secure MERN authentication flow with email OTP verification, session handling, OTP resend and expiration mechanisms, and cloud deployment using Render + Vercel + MongoDB Atlas.',
+      techStack: ['MongoDB','Express.js','React','Node.js','JWT','SMTP'],
+      githubUrl: 'https://github.com/SuryaPanduri/mfa-mern',
+      liveUrl: 'https://mfa-mern.vercel.app/login',
+      featured: true
     },
     {
       title: 'plagiSense',
-      shortDesc: 'Text & image plagiarism detection using LCS and FMM.',
-      tech: ['React','Node','MongoDB'],
-      repoUrl: 'https://github.com/yourusername/plagisense'
+      shortDescription: 'Text and image plagiarism detection using LCS and FMM algorithms.',
+      longDescription: 'Led a 5-member team to build a plagiarism detection system for text and images, featuring similarity scoring, highlighted matched content, multi-format support, and role-based secure access.',
+      techStack: ['React','Node.js','Express.js','MongoDB','Material UI','JWT'],
+      githubUrl: 'https://github.com/SuryaPanduri/plagiSense',
+      liveUrl: 'https://plagisense.vercel.app/',
+      featured: true
     }
   ]);
   console.log('Seeded');

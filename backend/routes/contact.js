@@ -4,6 +4,10 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
   const { name, email, message } = req.body;
+  if (!name || !email || !message) {
+    return res.status(400).json({ message: 'name, email and message are required' });
+  }
+
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,

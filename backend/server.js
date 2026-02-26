@@ -4,11 +4,13 @@ const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
+const FRONTEND_ORIGIN =
+  process.env.FRONTEND_ORIGIN || "http://localhost:5173";
 
 // ✅ CORS MUST COME BEFORE ROUTES
 app.use(
   cors({
-    origin: "http://localhost:5173", // Vite frontend
+    origin: FRONTEND_ORIGIN,
     credentials: true,
   })
 );

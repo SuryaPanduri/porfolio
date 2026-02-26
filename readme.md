@@ -102,3 +102,46 @@ This project is built with scalability in mind:
 Feel free to connect with me for collaboration or opportunities.
 
 GitHub: https://github.com/SuryaPanduri
+
+---
+
+## ⚙️ Local Setup
+
+### 1) Install dependencies
+
+```bash
+cd backend && npm install
+cd ../frontend && npm install
+```
+
+### 2) Configure environment variables
+
+Backend (`backend/.env`)
+
+```env
+PORT=5000
+MONGO_URI=<your_mongodb_connection_string>
+JWT_SECRET=<your_jwt_secret>
+FRONTEND_ORIGIN=http://localhost:5173
+EMAIL_HOST=<smtp_host>
+EMAIL_PORT=587
+EMAIL_USER=<smtp_user>
+EMAIL_PASS=<smtp_password>
+```
+
+Frontend (`frontend/.env`)
+
+```env
+VITE_API_BASE=http://localhost:5000/api
+VITE_RESUME_URL=<optional_resume_url>
+```
+
+### 3) Run development servers
+
+```bash
+# terminal 1
+cd backend && npm run dev
+
+# terminal 2
+cd frontend && npm run dev
+```

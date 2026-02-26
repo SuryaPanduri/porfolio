@@ -1,18 +1,16 @@
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
+import { api } from "./api";
 
 export const getProjects = async () => {
-  const res = await axios.get(`${API_URL}/api/projects`);
+  const res = await api.get("/projects");
   return res.data;
 };
 
 export const getFeaturedProjects = async () => {
-  const res = await axios.get(`${API_URL}/api/projects/featured`);
+  const res = await api.get("/projects/featured");
   return res.data;
 };
 
 export const getProjectById = async (id) => {
-  const res = await axios.get(`${API_URL}/api/projects/${id}`);
+  const res = await api.get(`/projects/${id}`);
   return res.data;
 };
